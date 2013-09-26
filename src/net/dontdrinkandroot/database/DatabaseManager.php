@@ -2,7 +2,7 @@
 
 
 namespace net\dontdrinkandroot\database;
-
+use \PDO;
 
 class DatabaseManager {
 
