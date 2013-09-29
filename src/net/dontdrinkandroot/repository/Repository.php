@@ -8,7 +8,7 @@ use net\dontdrinkandroot\database\Database;
 class Repository {
 
     /**
-     * @var Database
+     * @var MySqlDatabase
      */
     private $_oDatabase;
 
@@ -17,7 +17,7 @@ class Repository {
     private $_sPrimaryKey;
 
 
-    public function __construct( Database $oDatabase, $sTableName, $sPrimaryKey ) {
+    public function __construct(  Database $oDatabase, $sTableName, $sPrimaryKey ) {
 
         $this->_oDatabase = $oDatabase;
         $this->_sTableName = (string) $sTableName;

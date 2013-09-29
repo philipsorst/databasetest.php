@@ -11,7 +11,7 @@ class DatabaseManager {
     private $_aInstances = array();
 
 
-    public function registerDatabase($sName, DatabaseConfig $oConfig) {
+    public function registerDatabase( $sName, DatabaseConfig $oConfig ) {
 
         $this->_aConfigs[$sName] = $oConfig;
     }
@@ -27,7 +27,7 @@ class DatabaseManager {
         }
 
         $oConfig = $this->_aConfigs[$sName];
-        $oDb = new Database($oConfig);
+        $oDb = DatabaseFactory::createDatabase( $oConfig );
         $oDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $oDb->query('set names utf8');
 
