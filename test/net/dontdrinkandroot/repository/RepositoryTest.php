@@ -2,12 +2,35 @@
 
 namespace net\dontdrinkandroot\database\repository;
 
+use \PDO;
+use \PHPUnit_Extensions_Database_TestCase;
 use net\dontdrinkandroot\database\MySqlDatabaseConfig;
 use net\dontdrinkandroot\database\DatabaseManager;
 
-class RepositoryTest extends \PHPUnit_Extensions_Database_TestCase {
+class RepositoryTest extends PHPUnit_Extensions_Database_TestCase {
 
-    public function testFind() {
+//    private static $_oDatabaseManager;
+//
+//    public static function setUpBeforeClass()
+//    {
+//        self::$_oDatabaseManager = new DatabaseManager();
+//    }
+
+    public function getConnection()
+    {
+        $oDatabaseManager = new DatabaseManager();
+        $oPdo = new PDO('sqlite::memory:');
+        return $this->createDefaultDBConnection($oPdo, ':memory');
+    }
+
+    public function getDataSet()
+    {
+
+    }
+
+
+    public function testFind()
+    {
 
         $databaseManager = new DatabaseManager();
         $databaseConfig = new MySqlDatabaseConfig( "localhost", 3306, "test", "test", "test" );
