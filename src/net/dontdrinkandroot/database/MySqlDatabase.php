@@ -3,6 +3,10 @@
 namespace net\dontdrinkandroot\database;
 use \PDO;
 
+/**
+ * Implementation of a MySQL Database.
+ * @package net\dontdrinkandroot\database
+ */
 class MySqlDatabase extends Database {
 
     public function __construct( MySqlDatabaseConfig $oConfig )

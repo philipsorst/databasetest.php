@@ -4,6 +4,10 @@
 namespace net\dontdrinkandroot\database;
 
 
+/**
+ * Implementation of a SqLite Database.
+ * @package net\dontdrinkandroot\database
+ */
 class SqLiteDatabase extends Database
 {
 

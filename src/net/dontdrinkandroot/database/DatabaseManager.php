@@ -4,6 +4,10 @@
 namespace net\dontdrinkandroot\database;
 use \PDO;
 
+/**
+ * Manages Database Configurations and creates and manages databases on demand.
+ * @package net\dontdrinkandroot\database
+ */
 class DatabaseManager {
 
     private $_aConfigs = array();

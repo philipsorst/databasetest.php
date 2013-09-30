@@ -36,15 +36,17 @@ class Repository
      */
     public function find($mId)
     {
-        $sSql = 'SELECT * FROM `' . $this->_sTableName . '` ' .
-                'WHERE `' . $this->_sPrimaryKey . '` = :id';
+//        $sSql = 'SELECT * FROM `' . $this->_sTableName . '` ' .
+//                'WHERE `' . $this->_sPrimaryKey . '` = :id';
+//
+//        /** @var \PDOStatement */
+//        $oStatement = $this->_oDatabase->prepare($sSql);
+//        $oStatement->bindParam(':id', $mId);
+//        $oStatement->execute();
+//
+//        $aResults = $oStatement->fetchAll();
 
-        /** @var \PDOStatement */
-        $oStatement = $this->_oDatabase->prepare($sSql);
-        $oStatement->bindParam(':id', $mId);
-        $oStatement->execute();
-
-        $aResults = $oStatement->fetchAll();
+       $aResults = $this->_oDatabase->find($this->_sTableName, '`' . $this->_sPrimaryKey . '` = :id', array(':id' => $mId));
 
         if (0 == count($aResults)) {
             return null;

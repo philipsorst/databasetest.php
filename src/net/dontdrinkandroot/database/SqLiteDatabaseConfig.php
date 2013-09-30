@@ -4,6 +4,10 @@
 namespace net\dontdrinkandroot\database;
 
 
+/**
+ * Configuration options for a SqLite Database.
+ * @package net\dontdrinkandroot\database
+ */
 class SqLiteDatabaseConfig extends DatabaseConfig
 {
 

@@ -4,6 +4,10 @@
 namespace net\dontdrinkandroot\database;
 
 
+/**
+ * Instantiates databases on the DatabaseConfig given.
+ * @package net\dontdrinkandroot\database
+ */
 class DatabaseFactory {
 
     public static function createDatabase( DatabaseConfig $oConfig ) {

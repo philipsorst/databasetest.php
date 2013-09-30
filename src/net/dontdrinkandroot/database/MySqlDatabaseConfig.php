@@ -4,6 +4,10 @@
 namespace net\dontdrinkandroot\database;
 
 
+/**
+ * Configuration options for a MySql database.
+ * @package net\dontdrinkandroot\database
+ */
 class MySqlDatabaseConfig extends DatabaseConfig {
 
     private $_sHost;
