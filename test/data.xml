@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<dataset>
+    <table name="Article">
+        <column>id</column>
+        <column>name</column>
+        <column>price</column>
+        <row>
+            <value>1</value>
+            <value>Article One</value>
+            <value>3.99</value>
+        </row>
+        <row>
+            <value>2</value>
+            <value>Article Two</value>
+            <value>4.75</value>
+        </row>
+        <row>
+            <value>3</value>
+            <value>Article Three</value>
+            <value>1.23</value>
+        </row>
+    </table>
+</dataset>

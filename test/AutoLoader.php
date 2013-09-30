@@ -16,10 +16,13 @@ class AutoLoader {
 
         foreach( self::$_aDirectories as $includeDir ) {
             $sFile =  $includeDir . DIRECTORY_SEPARATOR . $sRelativePath;
+            //echo "Trying to load $sFile\n";
             if ( file_exists( $sFile ) ) {
                 require_once($sFile);
                 return;
             }
+
+            echo "Could not find file for $className\n";
         }
     }
 
