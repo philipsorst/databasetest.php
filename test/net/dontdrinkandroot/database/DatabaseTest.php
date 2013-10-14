@@ -53,4 +53,55 @@ class DatabaseTest extends PHPUnit_Extensions_Database_TestCase
         $this->assertEquals(4.75, $aResult['price']);
     }
 
+    public function testFindBatch()
+    {
+        $oDb = self::$_oDatabaseManager->getDatabase("test");
+
+        $oResultIterator = $oDb->findBatch('Article', '1 = 1', array(), null, 2);
+
+        $this->assertTrue($oResultIterator->valid());
+        $this->assertEquals(0, $oResultIterator->key());
+        $this->assertEquals(1, $oResultIterator->current()['id']);
+
+        $oResultIterator->next();
+        $this->assertTrue($oResultIterator->valid());
+        $this->assertEquals(1, $oResultIterator->key());
+        $this->assertEquals(2, $oResultIterator->current()['id']);
+
+        $oResultIterator->next();
+        $this->assertTrue($oResultIterator->valid());
+        $this->assertEquals(2, $oResultIterator->key());
+        $this->assertEquals(3, $oResultIterator->current()['id']);
+
+        $oResultIterator->next();
+        $this->assertFalse($oResultIterator->valid());
+    }
+
+    public function testFindBatchEmptyResult() {
+        $oDb = self::$_oDatabaseManager->getDatabase("test");
+
+        $oResultIterator = $oDb->findBatch('Article', '1 = 0', array(), null, 2);
+
+        $this->assertFalse($oResultIterator->valid());
+    }
+
+    public function testFindBatchSubset()
+    {
+        $oDb = self::$_oDatabaseManager->getDatabase("test");
+
+        $oResultIterator = $oDb->findBatch('Article', 'id > 1', array(), null, 2);
+
+        $this->assertTrue($oResultIterator->valid());
+        $this->assertEquals(0, $oResultIterator->key());
+        $this->assertEquals(2, $oResultIterator->current()['id']);
+
+        $oResultIterator->next();
+        $this->assertTrue($oResultIterator->valid());
+        $this->assertEquals(1, $oResultIterator->key());
+        $this->assertEquals(3, $oResultIterator->current()['id']);
+
+        $oResultIterator->next();
+        $this->assertFalse($oResultIterator->valid());
+    }
+
 }
