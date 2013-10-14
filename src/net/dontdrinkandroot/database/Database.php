@@ -36,22 +36,15 @@ class Database extends PDO
         return $oStatement->fetchAll();
     }
 
-    public function findWithLimit(
-        $sTableName,
-        $sWhereClause,
-        $aParameters,
-        $aColumnNames,
-        $iFirstResult,
-        $iNumResults )
-    {
-        $oStatement = $this->prepareFindWithLimit( $sTableName, $sWhereClause, $aColumnNames );
-        $oStatement->bindParam( ':firstResult', $iFirstResult );
-        $oStatement->bindParam( ':numResults', $iNumResults );
-        $oStatement->execute( $aParameters );
-
-        return $oStatement->fetchAll();
-    }
-
+    /**
+     * Prepares a statement to find rows on the database with a given where clause and pagination parameters.
+     *
+     * @param string $sTableName   Name of the database table.
+     * @param string $sWhereClause SQL that describes the WHERE clause.
+     * @param array  $aColumnNames The column names to select, omit to select all columns.
+     *
+     * @return \PDOStatement The statement prepared to execute the SELECT query.
+     */
     public function prepareFindWithLimit( $sTableName, $sWhereClause, $aColumnNames = null )
     {
         $sSql       = 'SELECT ' . $this->buildColumns( $aColumnNames ) . ' ' .
@@ -63,6 +56,19 @@ class Database extends PDO
         return $oStatement;
     }
 
+    /**
+     * Find rows on the database with the given restrictions. The results are encapsulated in a ResultIterator that
+     * only fetches the needed rows batchwise.
+     *
+     * @param string $sTableName   Name of the database table.
+     * @param string $sWhereClause SQL that describes the WHERE clause.
+     * @param array  $aParameters  The parameters that belong to the where clause (excluding pagination parameters).
+     * @param string $aColumnNames The column names to select, omit to select all columns.
+     * @param int    $iBatchSize   How many entries to fetch in one database query.
+     *
+     * @return ResultIterator An Iterator that transparently iterates over all results founds, refetching from database
+     * if necessary.
+     */
     public function findBatch(
         $sTableName,
         $sWhereClause,
@@ -70,7 +76,7 @@ class Database extends PDO
         $aColumnNames = null,
         $iBatchSize = self::DEFAULT_BATCH_SIZE )
     {
-        $oStatement = $this->prepareFindWithLimit($sTableName, $sWhereClause, $aColumnNames);
+        $oStatement = $this->prepareFindWithLimit( $sTableName, $sWhereClause, $aColumnNames );
 
         return new ResultIterator( $oStatement, $aParameters, $iBatchSize );
     }
