@@ -37,7 +37,7 @@ class RepositoryTest extends PHPUnit_Extensions_Database_TestCase
     public function testFind()
     {
         $db = self::$_oDatabaseManager->getDatabase("test");
-        $oRepository = new Repository($db, "Article", "id");
+        $oRepository = new DatabaseRepository($db, "Article", "id");
         $aResult = $oRepository->find(1);
 
         $this->assertEquals(1, $aResult["id"]);
@@ -49,7 +49,7 @@ class RepositoryTest extends PHPUnit_Extensions_Database_TestCase
     public function testDelete()
     {
         $db = self::$_oDatabaseManager->getDatabase("test");
-        $oRepository = new Repository($db, "Article", "id");
+        $oRepository = new DatabaseRepository($db, "Article", "id");
 
         $aResult = $oRepository->find(3);
         $this->assertNotNull($aResult);

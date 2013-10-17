@@ -2,10 +2,10 @@
 
 namespace net\dontdrinkandroot\repository;
 
-use \PDO;
 use \PHPUnit_Extensions_Database_TestCase;
 use net\dontdrinkandroot\database\MySqlDatabaseConfig;
 use net\dontdrinkandroot\database\DatabaseManager;
+use net\dontdrinkandroot\schema;
 
 class DatabaseTest extends PHPUnit_Extensions_Database_TestCase
 {
@@ -39,7 +39,10 @@ class DatabaseTest extends PHPUnit_Extensions_Database_TestCase
     public function testFind()
     {
         $oDb      = self::$_oDatabaseManager->getDatabase( "test" );
-        $aResults = $oDb->find( 'Article', '`price` > :price', array( 'price' => 3.5 ), array( 'name', 'price' ) );
+        $aResults = $oDb->find(
+            schema\Tables::ARTICLE, '`price` > :price',
+            array( 'price' => 3.5 ), array( 'name', 'price' )
+        );
 
         $this->assertCount( 2, $aResults );
 
