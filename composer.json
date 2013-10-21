@@ -1,0 +1,13 @@
+{
+    "config": {
+        "vendor-dir": "lib"
+    },
+
+    "require": {
+        "phpunit/dbunit" : "1.2.*"
+    }
+//
+//    "require": {
+//        "pdepend/pdepend" : "1.1.0"
+//    }
+}
