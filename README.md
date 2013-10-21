@@ -1,4 +1,4 @@
 databasetest.php
 ================
 
-Simple example of a PHP Database Layer based on PDO.
+Simple example of PHP Database access based on Doctrine Database Abstraction Layer.
