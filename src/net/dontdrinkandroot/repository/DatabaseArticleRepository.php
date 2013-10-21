@@ -9,16 +9,16 @@ use net\dontdrinkandroot\database\Database;
 class DatabaseArticleRepository extends DatabaseRepository implements ArticleRepository
 {
 
-    public function __construct( Database $oDb )
+    public function __construct(Database $database)
     {
-        parent::__construct( $oDb, schema\Tables::ARTICLE, schema\Article::ID );
+        parent::__construct($database, schema\Tables::ARTICLE, schema\Article::ID);
     }
 
-    function findArticlesWithPriceGreaterThan( $fPrice )
+    public function findArticlesWithPriceGreaterThan($price)
     {
-        $sWhere      = '`' . schema\Article::PRICE . '` > :price';
-        $aParameters = array( ':price' => $fPrice );
+        $sWhere = '`' . schema\Article::PRICE . '` > :price';
+        $aParameters = array(':price' => $price);
 
-        return $this->_oDatabase->find( $this->_sTableName, $sWhere, $aParameters );
+        return $this->dataBase->find($this->tableName, $sWhere, $aParameters);
     }
 }

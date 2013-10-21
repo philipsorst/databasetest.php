@@ -8,35 +8,36 @@ namespace net\dontdrinkandroot\database;
  * Configuration options for a MySql database.
  * @package net\dontdrinkandroot\database
  */
-class MySqlDatabaseConfig extends DatabaseConfig {
+class MySqlDatabaseConfig extends DatabaseConfig
+{
 
-    private $_sHost;
+    private $host;
 
-    private $_iPort = 3306;
+    private $port = 3306;
 
-    private $_sUserName;
+    private $userName;
 
-    private $_sPassword;
+    private $password;
 
-    private $_sDatabaseName;
+    private $databaseName;
 
-    public function __construct($_sHost, $_iPort, $sDatabaseName, $_sPassword, $_sUserName)
+    public function __construct($host, $port, $databaseName, $password, $userName)
     {
-        $this->_iPort = $_iPort;
-        $this->_sHost = $_sHost;
-        $this->_sPassword = $_sPassword;
-        $this->_sUserName = $_sUserName;
-        $this->_sDatabaseName = $sDatabaseName;
+        $this->port = $port;
+        $this->host = $host;
+        $this->password = $password;
+        $this->userName = $userName;
+        $this->databaseName = $databaseName;
     }
 
     public function getDatabaseName()
     {
-        return $this->_sDatabaseName;
+        return $this->databaseName;
     }
 
     public function setDatabaseName($sDataBaseName)
     {
-        $this->_sDatabaseName = $sDataBaseName;
+        $this->databaseName = $sDataBaseName;
     }
 
     /**
@@ -44,7 +45,7 @@ class MySqlDatabaseConfig extends DatabaseConfig {
      */
     public function setPort($iPort)
     {
-        $this->_iPort = $iPort;
+        $this->port = $iPort;
     }
 
     /**
@@ -52,7 +53,7 @@ class MySqlDatabaseConfig extends DatabaseConfig {
      */
     public function getPort()
     {
-        return $this->_iPort;
+        return $this->port;
     }
 
     /**
@@ -60,7 +61,7 @@ class MySqlDatabaseConfig extends DatabaseConfig {
      */
     public function setHost($sHost)
     {
-        $this->_sHost = $sHost;
+        $this->host = $sHost;
     }
 
     /**
@@ -68,7 +69,7 @@ class MySqlDatabaseConfig extends DatabaseConfig {
      */
     public function getHost()
     {
-        return $this->_sHost;
+        return $this->host;
     }
 
     /**
@@ -76,7 +77,7 @@ class MySqlDatabaseConfig extends DatabaseConfig {
      */
     public function setPassword($sPassword)
     {
-        $this->_sPassword = $sPassword;
+        $this->password = $sPassword;
     }
 
     /**
@@ -84,7 +85,7 @@ class MySqlDatabaseConfig extends DatabaseConfig {
      */
     public function getPassword()
     {
-        return $this->_sPassword;
+        return $this->password;
     }
 
     /**
@@ -92,7 +93,7 @@ class MySqlDatabaseConfig extends DatabaseConfig {
      */
     public function seSUserName($sUserName)
     {
-        $this->_sUserName = $sUserName;
+        $this->userName = $sUserName;
     }
 
     /**
@@ -100,9 +101,7 @@ class MySqlDatabaseConfig extends DatabaseConfig {
      */
     public function getUserName()
     {
-        return $this->_sUserName;
+        return $this->userName;
     }
-
-
 
 }

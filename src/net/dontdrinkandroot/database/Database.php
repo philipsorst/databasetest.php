@@ -18,20 +18,20 @@ class Database extends PDO
     /**
      * Find rows on the database with the given restrictions.
      *
-     * @param string $sTableName   Name of the database table.
-     * @param string $sWhereClause SQL that describes the WHERE Clause.
-     * @param array  $aParameters  Binded parameters that belong to the where clause.
-     * @param array  $aColumnNames The column names to select, omit to select all columns.
+     * @param string $tableName   Name of the database table.
+     * @param string $whereClause SQL that describes the WHERE Clause.
+     * @param array $parameters  Binded parameters that belong to the where clause.
+     * @param array $columnNames The column names to select, omit to select all columns.
      *
      * @return array The result as an array.
      */
-    public function find( $sTableName, $sWhereClause, $aParameters, $aColumnNames = null )
+    public function find($tableName, $whereClause, $parameters, $columnNames = null)
     {
-        $sSql       = 'SELECT ' . $this->buildColumns( $aColumnNames ) . ' ' .
-                      'FROM `' . $sTableName . '` ' .
-                      'WHERE ' . $sWhereClause;
-        $oStatement = $this->prepare( $sSql );
-        $oStatement->execute( $aParameters );
+        $sSql = 'SELECT ' . $this->buildColumns($columnNames) . ' ' .
+            'FROM `' . $tableName . '` ' .
+            'WHERE ' . $whereClause;
+        $oStatement = $this->prepare($sSql);
+        $oStatement->execute($parameters);
 
         return $oStatement->fetchAll();
     }
@@ -39,19 +39,19 @@ class Database extends PDO
     /**
      * Prepares a statement to find rows on the database with a given where clause and pagination parameters.
      *
-     * @param string $sTableName   Name of the database table.
-     * @param string $sWhereClause SQL that describes the WHERE clause.
-     * @param array  $aColumnNames The column names to select, omit to select all columns.
+     * @param string $tableName   Name of the database table.
+     * @param string $whereClause SQL that describes the WHERE clause.
+     * @param array $columnNames The column names to select, omit to select all columns.
      *
      * @return \PDOStatement The statement prepared to execute the SELECT query.
      */
-    public function prepareFindWithLimit( $sTableName, $sWhereClause, $aColumnNames = null )
+    public function prepareFindWithLimit($tableName, $whereClause, $columnNames = null)
     {
-        $sSql       = 'SELECT ' . $this->buildColumns( $aColumnNames ) . ' ' .
-                      'FROM `' . $sTableName . '` ' .
-                      'WHERE ' . $sWhereClause . ' ' .
-                      'LIMIT :firstResult,:numResults';
-        $oStatement = $this->prepare( $sSql );
+        $sSql = 'SELECT ' . $this->buildColumns($columnNames) . ' ' .
+            'FROM `' . $tableName . '` ' .
+            'WHERE ' . $whereClause . ' ' .
+            'LIMIT :firstResult,:numResults';
+        $oStatement = $this->prepare($sSql);
 
         return $oStatement;
     }
@@ -60,33 +60,33 @@ class Database extends PDO
      * Find rows on the database with the given restrictions. The results are encapsulated in a ResultIterator that
      * only fetches the needed rows batchwise.
      *
-     * @param string $sTableName   Name of the database table.
-     * @param string $sWhereClause SQL that describes the WHERE clause.
-     * @param array  $aParameters  The parameters that belong to the where clause (excluding pagination parameters).
-     * @param string $aColumnNames The column names to select, omit to select all columns.
-     * @param int    $iBatchSize   How many entries to fetch in one database query.
+     * @param string $tableName   Name of the database table.
+     * @param string $whereClause SQL that describes the WHERE clause.
+     * @param array $parameters  The parameters that belong to the where clause (excluding pagination parameters).
+     * @param string $columnNames The column names to select, omit to select all columns.
+     * @param int $batchSize   How many entries to fetch in one database query.
      *
      * @return ResultIterator An Iterator that transparently iterates over all results founds, refetching from database
      * if necessary.
      */
     public function findBatch(
-        $sTableName,
-        $sWhereClause,
-        $aParameters,
-        $aColumnNames = null,
-        $iBatchSize = self::DEFAULT_BATCH_SIZE )
-    {
-        $oStatement = $this->prepareFindWithLimit( $sTableName, $sWhereClause, $aColumnNames );
+        $tableName,
+        $whereClause,
+        $parameters,
+        $columnNames = null,
+        $batchSize = self::DEFAULT_BATCH_SIZE
+    ) {
+        $statement = $this->prepareFindWithLimit($tableName, $whereClause, $columnNames);
 
-        return new ResultIterator( $oStatement, $aParameters, $iBatchSize );
+        return new ResultIterator($statement, $parameters, $batchSize);
     }
 
-    private function buildColumns( $aColumnNames )
+    private function buildColumns($columnNames)
     {
-        if ( $aColumnNames == null || 0 == count( $aColumnNames ) ) {
+        if ($columnNames == null || 0 == count($columnNames)) {
             return '*';
         }
 
-        return '`' . implode( '`,`', $aColumnNames ) . '`';
+        return '`' . implode('`,`', $columnNames) . '`';
     }
 }

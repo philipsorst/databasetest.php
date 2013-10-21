@@ -9,6 +9,7 @@ namespace net\dontdrinkandroot\database;
  * these options.
  * @package net\dontdrinkandroot\database
  */
-class DatabaseConfig {
+class DatabaseConfig
+{
 
 }

@@ -4,10 +4,11 @@
 namespace net\dontdrinkandroot\repository;
 
 
-interface Repository {
+interface Repository
+{
 
-    function find( $mId );
+    public function find($mId);
 
-    function delete( $mId );
+    public function delete($id);
 
 }

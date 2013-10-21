@@ -8,20 +8,21 @@ namespace net\dontdrinkandroot\database;
  * Instantiates databases on the DatabaseConfig given.
  * @package net\dontdrinkandroot\database
  */
-class DatabaseFactory {
+class DatabaseFactory
+{
 
-    public static function createDatabase( DatabaseConfig $oConfig ) {
+    public static function createDatabase(DatabaseConfig $config)
+    {
+        if ($config instanceof MySqlDatabaseConfig) {
 
-        if ( $oConfig instanceof MySqlDatabaseConfig ) {
+            return new MySqlDatabase($config);
 
-            return new MySqlDatabase( $oConfig );
+        } elseif ($config instanceof SqLiteDatabaseConfig) {
 
-        } else if ( $oConfig instanceof SqLiteDatabaseConfig ) {
-
-            return new SqLiteDatabase( $oConfig );
+            return new SqLiteDatabase($config);
         }
 
-        throw new RuntimeException("Unsupported database config " . get_class( $oConfig ));
+        throw new RuntimeException("Unsupported database config " . get_class($config));
     }
 
 }

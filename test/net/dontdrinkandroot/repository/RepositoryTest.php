@@ -13,51 +13,51 @@ class RepositoryTest extends PHPUnit_Extensions_Database_TestCase
     /**
      * @var DatabaseManager
      */
-    private static $_oDatabaseManager;
+    private static $databaseManager;
 
     public static function setUpBeforeClass()
     {
-        self::$_oDatabaseManager = new DatabaseManager();
-        self::$_oDatabaseManager->registerDatabase("test", new MySqlDatabaseConfig("localhost", 3306, "test", "test", "test"));
+        self::$databaseManager = new DatabaseManager();
+        self::$databaseManager->registerDatabase("test", new MySqlDatabaseConfig("localhost", 3306, "test", "test", "test"));
     }
 
     public function getConnection()
     {
-        $oDb = self::$_oDatabaseManager->getDatabase("test");
-        return $this->createDefaultDBConnection($oDb);
+        $database = self::$databaseManager->getDatabase("test");
+        return $this->createDefaultDBConnection($database);
     }
 
     public function getDataSet()
     {
-        $sDbPath = __DIR__ . "/../../../data.xml";
-        return $this->createXMLDataSet(realpath($sDbPath));
+        $databasePath = __DIR__ . "/../../../data.xml";
+        return $this->createXMLDataSet(realpath($databasePath));
     }
 
 
     public function testFind()
     {
-        $db = self::$_oDatabaseManager->getDatabase("test");
-        $oRepository = new DatabaseRepository($db, "Article", "id");
-        $aResult = $oRepository->find(1);
+        $database = self::$databaseManager->getDatabase("test");
+        $oRepository = new DatabaseRepository($database, "Article", "id");
+        $result = $oRepository->find(1);
 
-        $this->assertEquals(1, $aResult["id"]);
-        $this->assertEquals("Article One", $aResult["name"]);
-        $this->assertEquals(3.99, $aResult["price"]);
+        $this->assertEquals(1, $result["id"]);
+        $this->assertEquals("Article One", $result["name"]);
+        $this->assertEquals(3.99, $result["price"]);
     }
 
 
     public function testDelete()
     {
-        $db = self::$_oDatabaseManager->getDatabase("test");
-        $oRepository = new DatabaseRepository($db, "Article", "id");
+        $database = self::$databaseManager->getDatabase("test");
+        $repository = new DatabaseRepository($database, "Article", "id");
 
-        $aResult = $oRepository->find(3);
-        $this->assertNotNull($aResult);
+        $result = $repository->find(3);
+        $this->assertNotNull($result);
 
-        $this->assertEquals(1, $oRepository->delete(3));
+        $this->assertEquals(1, $repository->delete(3));
 
-        $aResult = $oRepository->find(3);
-        $this->assertNull($aResult);
+        $result = $repository->find(3);
+        $this->assertNull($result);
     }
 
 }

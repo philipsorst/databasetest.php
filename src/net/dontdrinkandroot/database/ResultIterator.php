@@ -10,25 +10,25 @@ use \PDO;
 class ResultIterator implements Iterator
 {
 
-    private $_oStatement;
-    private $_aParameters;
-    private $_iBatchSize;
-    private $_aCurrentResult = null;
-    private $_iCurrentPage = 0;
-    private $_iRowNum = 0;
+    private $statement;
+    private $parameters;
+    private $batchSize;
+    private $currentResult = null;
+    private $currentPage = 0;
+    private $rowNum = 0;
 
     /**
      * Constructs a new ResultIterator.
      *
-     * @param PDOStatement $oStatement  The statement to iterate through.
-     * @param array        $aParameters The parameters of the statement (excluding the pagination parameters.)
-     * @param int          $iBatchSize  The number of entries per window.
+     * @param PDOStatement $statement  The statement to iterate through.
+     * @param array $parameters The parameters of the statement (excluding the pagination parameters.)
+     * @param int $batchSize  The number of entries per window.
      */
-    public function __construct( PDOStatement $oStatement, $aParameters, $iBatchSize )
+    public function __construct(PDOStatement $statement, $parameters, $batchSize)
     {
-        $this->_oStatement  = $oStatement;
-        $this->_aParameters = $aParameters;
-        $this->_iBatchSize  = $iBatchSize;
+        $this->statement = $statement;
+        $this->parameters = $parameters;
+        $this->batchSize = $batchSize;
     }
 
     /**
@@ -40,7 +40,7 @@ class ResultIterator implements Iterator
     {
         $this->fetchIfNeeded();
 
-        return $this->_aCurrentResult[ $this->getRelativeRowNum() ];
+        return $this->currentResult[$this->getRelativeRowNum()];
     }
 
     /**
@@ -50,19 +50,19 @@ class ResultIterator implements Iterator
      */
     public function key()
     {
-        return $this->_iRowNum;
+        return $this->rowNum;
     }
 
     public function next()
     {
-        $this->_iRowNum++;
+        $this->rowNum++;
     }
 
     public function rewind()
     {
-        $this->_iRowNum        = 0;
-        $this->_iCurrentPage   = 0;
-        $this->_aCurrentResult = null;
+        $this->rowNum = 0;
+        $this->currentPage = 0;
+        $this->currentResult = null;
     }
 
     public function valid()
@@ -70,7 +70,7 @@ class ResultIterator implements Iterator
         $this->fetchIfNeeded();
 
         return
-            !empty( $this->_aCurrentResult ) && array_key_exists( $this->getRelativeRowNum(), $this->_aCurrentResult );
+            !empty($this->currentResult) && array_key_exists($this->getRelativeRowNum(), $this->currentResult);
     }
 
     /**
@@ -78,49 +78,49 @@ class ResultIterator implements Iterator
      */
     private function fetchIfNeeded()
     {
-        if ( is_null( $this->_aCurrentResult ) ) {
-            $this->_aCurrentResult = $this->fetchPage( $this->_iCurrentPage );
+        if (is_null($this->currentResult)) {
+            $this->currentResult = $this->fetchPage($this->currentPage);
         }
 
-        if ( $this->_iRowNum >= $this->_iCurrentPage * $this->_iBatchSize + $this->_iBatchSize ) {
-            $this->_iCurrentPage   = $this->getPageNum( $this->_iRowNum );
-            $this->_aCurrentResult = $this->fetchPage( $this->_iCurrentPage );
+        if ($this->rowNum >= $this->currentPage * $this->batchSize + $this->batchSize) {
+            $this->currentPage = $this->getPageNum($this->rowNum);
+            $this->currentResult = $this->fetchPage($this->currentPage);
         }
     }
 
     /**
      * Fetches the results for the given page.
      *
-     * @param int $iPageNum The page to fetch the results for.
+     * @param int $pageNum The page to fetch the results for.
      *
      * @return array The rows in the page.
      */
-    private function fetchPage( $iPageNum )
+    private function fetchPage($pageNum)
     {
-        if ( !is_null( $this->_aParameters ) && is_array( $this->_aParameters ) ) {
-            foreach ( $this->_aParameters as $name => $value ) {
-                $this->_oStatement->bindParam( $name, $value );
+        if (!is_null($this->parameters) && is_array($this->parameters)) {
+            foreach ($this->parameters as $name => $value) {
+                $this->statement->bindParam($name, $value);
             }
         }
-        $iFirstResult = $iPageNum * $this->_iBatchSize;
-        $this->_oStatement->bindValue( ":firstResult", $iFirstResult, PDO::PARAM_INT );
-        $this->_oStatement->bindValue( ":numResults", $this->_iBatchSize, PDO::PARAM_INT );
+        $firstResult = $pageNum * $this->batchSize;
+        $this->statement->bindValue(":firstResult", $firstResult, PDO::PARAM_INT);
+        $this->statement->bindValue(":numResults", $this->batchSize, PDO::PARAM_INT);
 
-        $this->_oStatement->execute();
+        $this->statement->execute();
 
-        return $this->_oStatement->fetchAll();
+        return $this->statement->fetchAll();
     }
 
     /**
      * Get the page number that corresponds to the given row.
      *
-     * @param int $iRowNum The row number to compute the page for.
+     * @param int $rowNum The row number to compute the page for.
      *
      * @return int The page for the row number.
      */
-    private function getPageNum( $iRowNum )
+    private function getPageNum($rowNum)
     {
-        return (int)( $iRowNum / $this->_iBatchSize );
+        return (int)($rowNum / $this->batchSize);
     }
 
     /**
@@ -130,6 +130,6 @@ class ResultIterator implements Iterator
      */
     private function getRelativeRowNum()
     {
-        return $this->_iRowNum % $this->_iBatchSize;
+        return $this->rowNum % $this->batchSize;
     }
 }

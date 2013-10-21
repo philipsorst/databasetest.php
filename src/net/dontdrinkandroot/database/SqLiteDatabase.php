@@ -11,9 +11,9 @@ namespace net\dontdrinkandroot\database;
 class SqLiteDatabase extends Database
 {
 
-    public function __construct( SqLiteDatabaseConfig $oConfig )
+    public function __construct(SqLiteDatabaseConfig $config)
     {
-        parent::__construct( 'sqlite:' . $oConfig->getPath() );
+        parent::__construct('sqlite:' . $config->getPath());
     }
 
 }

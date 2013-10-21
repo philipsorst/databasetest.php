@@ -2,40 +2,42 @@
 
 
 namespace net\dontdrinkandroot\database;
+
 use \PDO;
 
 /**
  * Manages Database Configurations and creates and manages databases on demand.
  * @package net\dontdrinkandroot\database
  */
-class DatabaseManager {
+class DatabaseManager
+{
 
-    private $_aConfigs = array();
+    private $configs = array();
 
-    private $_aInstances = array();
+    private $instances = array();
 
 
-    public function registerDatabase( $sName, DatabaseConfig $oConfig ) {
-
-        $this->_aConfigs[$sName] = $oConfig;
+    public function registerDatabase($sName, DatabaseConfig $config)
+    {
+        $this->configs[$sName] = $config;
     }
 
-    public function getDatabase($sName) {
-
-        if (isset($this->_aInstances[$sName])) {
-            return $this->_aInstances[$sName];
+    public function getDatabase($name)
+    {
+        if (isset($this->instances[$name])) {
+            return $this->instances[$name];
         }
 
-        if (!isset($this->_aConfigs[$sName])) {
-            throw new \RuntimeException("No Database with the name $sName was found, you need to register it first.");
+        if (!isset($this->configs[$name])) {
+            throw new \RuntimeException("No Database with the name $name was found, you need to register it first.");
         }
 
-        $oConfig = $this->_aConfigs[$sName];
-        $oDb = DatabaseFactory::createDatabase( $oConfig );
+        $oConfig = $this->configs[$name];
+        $oDb = DatabaseFactory::createDatabase($oConfig);
         $oDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $oDb->query('set names utf8');
 
-        $this->_aInstances[$sName] = $oDb;
+        $this->instances[$name] = $oDb;
 
         return $oDb;
     }

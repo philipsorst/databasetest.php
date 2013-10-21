@@ -13,46 +13,48 @@ class DatabaseArticleRepositoryTest extends PHPUnit_Extensions_Database_TestCase
     /**
      * @var DatabaseManager
      */
-    private static $_oDatabaseManager;
+    private static $databaseManager;
 
     public static function setUpBeforeClass()
     {
-        self::$_oDatabaseManager = new DatabaseManager();
-        self::$_oDatabaseManager->registerDatabase( "test",
-                                                    new MySqlDatabaseConfig( "localhost", 3306, "test", "test", "test" ) );
+        self::$databaseManager = new DatabaseManager();
+        self::$databaseManager->registerDatabase(
+            "test",
+            new MySqlDatabaseConfig("localhost", 3306, "test", "test", "test")
+        );
     }
 
     public function getConnection()
     {
-        $oDb = self::$_oDatabaseManager->getDatabase( "test" );
+        $database = self::$databaseManager->getDatabase("test");
 
-        return $this->createDefaultDBConnection( $oDb );
+        return $this->createDefaultDBConnection($database);
     }
 
     public function getDataSet()
     {
-        $sDbPath = __DIR__ . "/../../../data.xml";
+        $databasePath = __DIR__ . "/../../../data.xml";
 
-        return $this->createXMLDataSet( realpath( $sDbPath ) );
+        return $this->createXMLDataSet(realpath($databasePath));
     }
 
     public function testFindArticlesWithPriceGreaterThan()
     {
-        $oDb         = self::$_oDatabaseManager->getDatabase( "test" );
-        $oRepository = new DatabaseArticleRepository( $oDb );
-        $aResults    = $oRepository->findArticlesWithPriceGreaterThan( 3.5 );
+        $database = self::$databaseManager->getDatabase("test");
+        $repository = new DatabaseArticleRepository($database);
+        $results = $repository->findArticlesWithPriceGreaterThan(3.5);
 
-        $this->assertCount( 2, $aResults );
+        $this->assertCount(2, $results);
 
         /* This assumes that the ordering is by natural insertion */
-        $aResult = $aResults[ 0 ];
-        $this->assertEquals( 1, $aResult[ 'id' ] );
-        $this->assertEquals( 'Article One', $aResult[ 'name' ] );
-        $this->assertEquals( 3.99, $aResult[ 'price' ] );
+        $result = $results[0];
+        $this->assertEquals(1, $result['id']);
+        $this->assertEquals('Article One', $result['name']);
+        $this->assertEquals(3.99, $result['price']);
 
-        $aResult = $aResults[ 1 ];
-        $this->assertEquals( 2, $aResult[ 'id' ] );
-        $this->assertEquals( 'Article Two', $aResult[ 'name' ] );
-        $this->assertEquals( 4.75, $aResult[ 'price' ] );
+        $result = $results[1];
+        $this->assertEquals(2, $result['id']);
+        $this->assertEquals('Article Two', $result['name']);
+        $this->assertEquals(4.75, $result['price']);
     }
 }

@@ -4,8 +4,9 @@
 namespace net\dontdrinkandroot\repository;
 
 
-interface ArticleRepository extends Repository {
+interface ArticleRepository extends Repository
+{
 
-    function findArticlesWithPriceGreaterThan( $fPrice );
+    public function findArticlesWithPriceGreaterThan($price);
 
 }

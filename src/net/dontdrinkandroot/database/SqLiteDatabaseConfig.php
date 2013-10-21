@@ -11,22 +11,22 @@ namespace net\dontdrinkandroot\database;
 class SqLiteDatabaseConfig extends DatabaseConfig
 {
 
-    private $_sPath;
+    private $path;
 
 
-    public function __construct( $sPath )
+    public function __construct($path)
     {
-        $this->_sPath = $sPath;
+        $this->path = $path;
     }
 
     public function getPath()
     {
-        return $this->_sPath;
+        return $this->path;
     }
 
-    public function setPath( $sPath )
+    public function setPath($path)
     {
-        $this->_sPath = $sPath;
+        $this->path = $path;
     }
 
 }
