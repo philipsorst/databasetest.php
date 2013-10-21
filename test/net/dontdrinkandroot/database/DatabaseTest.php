@@ -2,45 +2,16 @@
 
 namespace net\dontdrinkandroot\repository;
 
+use net\dontdrinkandroot\DatabaseTestCase;
 use \PHPUnit_Extensions_Database_TestCase;
-use net\dontdrinkandroot\database\MySqlDatabaseConfig;
-use net\dontdrinkandroot\database\DatabaseManager;
 use net\dontdrinkandroot\schema;
 
-class DatabaseTest extends PHPUnit_Extensions_Database_TestCase
+class DatabaseTest extends DatabaseTestCase
 {
-
-    /**
-     * @var DatabaseManager
-     */
-    private static $databaseManager;
-
-    public static function setUpBeforeClass()
-    {
-        self::$databaseManager = new DatabaseManager();
-        self::$databaseManager->registerDatabase(
-            "test",
-            new MySqlDatabaseConfig("localhost", 3306, "test", "test", "test")
-        );
-    }
-
-    public function getConnection()
-    {
-        $database = self::$databaseManager->getDatabase("test");
-
-        return $this->createDefaultDBConnection($database);
-    }
-
-    public function getDataSet()
-    {
-        $databasePath = __DIR__ . "/../../../data.xml";
-
-        return $this->createXMLDataSet(realpath($databasePath));
-    }
 
     public function testFind()
     {
-        $database = self::$databaseManager->getDatabase("test");
+        $database = $this->getDatabase();
         $aResults = $database->find(
             schema\Tables::ARTICLE,
             '`price` > :price',
@@ -64,7 +35,7 @@ class DatabaseTest extends PHPUnit_Extensions_Database_TestCase
 
     public function testFindBatch()
     {
-        $database = self::$databaseManager->getDatabase("test");
+        $database = $this->getDatabase();
 
         $resultIterator = $database->findBatch('Article', '1 = 1', array(), null, 2);
 
@@ -88,7 +59,7 @@ class DatabaseTest extends PHPUnit_Extensions_Database_TestCase
 
     public function testFindBatchEmptyResult()
     {
-        $database = self::$databaseManager->getDatabase("test");
+        $database = $this->getDatabase();
 
         $resultIterator = $database->findBatch('Article', '1 = 0', array(), null, 2);
 
@@ -97,7 +68,7 @@ class DatabaseTest extends PHPUnit_Extensions_Database_TestCase
 
     public function testFindBatchSubset()
     {
-        $database = self::$databaseManager->getDatabase("test");
+        $database = $this->getDatabase();
 
         $resultIterator = $database->findBatch('Article', 'id > 1', array(), null, 2);
 

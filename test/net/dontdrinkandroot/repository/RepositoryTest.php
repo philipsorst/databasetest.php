@@ -2,41 +2,18 @@
 
 namespace net\dontdrinkandroot\repository;
 
+use net\dontdrinkandroot\DatabaseTestCase;
 use \PDO;
 use \PHPUnit_Extensions_Database_TestCase;
 use net\dontdrinkandroot\database\MySqlDatabaseConfig;
 use net\dontdrinkandroot\database\DatabaseManager;
 
-class RepositoryTest extends PHPUnit_Extensions_Database_TestCase
+class RepositoryTest extends DatabaseTestCase
 {
-
-    /**
-     * @var DatabaseManager
-     */
-    private static $databaseManager;
-
-    public static function setUpBeforeClass()
-    {
-        self::$databaseManager = new DatabaseManager();
-        self::$databaseManager->registerDatabase("test", new MySqlDatabaseConfig("localhost", 3306, "test", "test", "test"));
-    }
-
-    public function getConnection()
-    {
-        $database = self::$databaseManager->getDatabase("test");
-        return $this->createDefaultDBConnection($database);
-    }
-
-    public function getDataSet()
-    {
-        $databasePath = __DIR__ . "/../../../data.xml";
-        return $this->createXMLDataSet(realpath($databasePath));
-    }
-
 
     public function testFind()
     {
-        $database = self::$databaseManager->getDatabase("test");
+        $database = $this->getDatabase();
         $oRepository = new DatabaseRepository($database, "Article", "id");
         $result = $oRepository->find(1);
 
@@ -48,7 +25,7 @@ class RepositoryTest extends PHPUnit_Extensions_Database_TestCase
 
     public function testDelete()
     {
-        $database = self::$databaseManager->getDatabase("test");
+        $database = $this->getDatabase();
         $repository = new DatabaseRepository($database, "Article", "id");
 
         $result = $repository->find(3);

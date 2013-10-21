@@ -32,14 +32,13 @@ class DatabaseManager
             throw new \RuntimeException("No Database with the name $name was found, you need to register it first.");
         }
 
-        $oConfig = $this->configs[$name];
-        $oDb = DatabaseFactory::createDatabase($oConfig);
-        $oDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $oDb->query('set names utf8');
+        $config = $this->configs[$name];
+        $database = DatabaseFactory::createDatabase($config);
+        $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $this->instances[$name] = $oDb;
+        $this->instances[$name] = $database;
 
-        return $oDb;
+        return $database;
     }
 
 }

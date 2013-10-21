@@ -15,7 +15,10 @@ class DatabaseFactory
     {
         if ($config instanceof MySqlDatabaseConfig) {
 
-            return new MySqlDatabase($config);
+            $database = new MySqlDatabase($config);
+            $database->query('set names utf8');
+
+            return $database;
 
         } elseif ($config instanceof SqLiteDatabaseConfig) {
 
