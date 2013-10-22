@@ -5,7 +5,7 @@ namespace net\dontdrinkandroot\repository;
 use net\dontdrinkandroot\database\Database;
 use net\dontdrinkandroot\exception\TooManyResultsException;
 
-class DatabaseRepository implements Repository
+class DatabaseRepository extends AbstractRepository
 {
 
     /**
@@ -13,15 +13,12 @@ class DatabaseRepository implements Repository
      */
     protected $dataBase;
 
-    protected $tableName;
 
-    protected $primaryKey;
 
     public function __construct(Database $database, $tableName, $primaryKey)
     {
+        parent::__construct($tableName, $primaryKey);
         $this->dataBase = $database;
-        $this->tableName = (string)$tableName;
-        $this->primaryKey = (string)$primaryKey;
     }
 
     /**

@@ -8,7 +8,7 @@ use \PHPUnit_Extensions_Database_TestCase;
 use net\dontdrinkandroot\database\MySqlDatabaseConfig;
 use net\dontdrinkandroot\database\DatabaseManager;
 
-class RepositoryTest extends DatabaseTestCase
+class DatabaseRepositoryTest extends DatabaseTestCase
 {
 
     public function testFind()
