@@ -9,11 +9,24 @@ use net\dontdrinkandroot\schema;
 class DatabaseRepositoryTest extends DatabaseTestCase
 {
 
+    /**
+     * @var Repository
+     */
+    protected static $repository;
+
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        self::$repository = new DatabaseRepository(
+            self::$databaseManager->getDatabase("test"),
+            schema\Tables::ARTICLE,
+            schema\Article::ID
+        );
+    }
+
     public function testFind()
     {
-        $database = $this->getDatabase();
-        $oRepository = new DatabaseRepository($database, "Article", "id");
-        $result = $oRepository->find(1);
+        $result = self::$repository->find(1);
 
         $this->assertEquals(1, $result["id"]);
         $this->assertEquals("Article One", $result["name"]);
@@ -23,24 +36,18 @@ class DatabaseRepositoryTest extends DatabaseTestCase
 
     public function testDelete()
     {
-        $database = $this->getDatabase();
-        $repository = new DatabaseRepository($database, "Article", "id");
-
-        $result = $repository->find(3);
+        $result = self::$repository->find(3);
         $this->assertNotNull($result);
 
-        $this->assertEquals(1, $repository->delete(3));
+        $this->assertEquals(1, self::$repository->delete(3));
 
-        $result = $repository->find(3);
+        $result = self::$repository->find(3);
         $this->assertNull($result);
     }
 
     public function testFindAll()
     {
-        $database = $this->getDatabase();
-        $repository = new DatabaseRepository($database, schema\Tables::ARTICLE, schema\Article::ID);
-
-        $results = $repository->findAll();
+        $results = self::$repository->findAll();
 
         $this->assertCount(3, $results);
 
@@ -59,6 +66,26 @@ class DatabaseRepositoryTest extends DatabaseTestCase
         $this->assertEquals(3, $result['id']);
         $this->assertEquals('Article Three', $result['name']);
         $this->assertEquals(1.23, $result['price']);
+    }
+
+    public function testInsert()
+    {
+        $articleName = 'A new article';
+        $articlePrice = 42.21;
+
+        $row = array(schema\Article::NAME => $articleName, schema\Article::PRICE => $articlePrice);
+
+        $this->assertEquals(1, self::$repository->insert($row));
+
+        $result = self::$repository->findAll();
+
+        $this->assertCount(4, $result);
+
+        $insertedRow = $result[3];
+
+        $this->assertNotNull($insertedRow[schema\Article::ID]);
+        $this->assertEquals($articleName, $insertedRow[schema\Article::NAME]);
+        $this->assertEquals($articlePrice, $insertedRow[schema\Article::PRICE]);
     }
 
 }

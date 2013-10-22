@@ -9,10 +9,10 @@ use Doctrine\DBAL\DriverManager;
 class DoctrineTestCase extends DatabaseTestCase
 {
 
-    protected function getDoctrineConnection()
+    protected static function getDoctrineConnection()
     {
         $config = new Configuration();
-        $connectionParams = array('pdo' => $this->getDatabase());
+        $connectionParams = array('pdo' => self::$databaseManager->getDatabase('test'));
         $conn = DriverManager::getConnection($connectionParams, $config);
 
         return $conn;

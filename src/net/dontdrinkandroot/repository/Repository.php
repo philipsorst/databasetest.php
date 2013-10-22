@@ -34,4 +34,12 @@ interface Repository
      */
     public function delete($id);
 
+    /**
+     * Insert a row in to the table.
+     *
+     * @param array $row The row to insert as an associative array where the key is the column and the value the value.
+     * @return int The number of rows that were affected (this should always be 1 as otherwise something went wrong).
+     */
+    public function insert(array $row);
+
 }

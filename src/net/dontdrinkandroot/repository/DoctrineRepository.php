@@ -28,7 +28,7 @@ class DoctrineRepository extends AbstractRepository
             return null;
         }
 
-        /* This exception should is only thrown if the primary key was not specified correctly */
+        /* This exception is only thrown if the primary key was not specified correctly */
         if (1 < count($results)) {
             throw new TooManyResultsException(
                 'Found ' . count($results) .
@@ -48,5 +48,10 @@ class DoctrineRepository extends AbstractRepository
     {
         $sql = 'SELECT * FROM `' . $this->tableName . '`';
         return $this->connection->fetchAll($sql);
+    }
+
+    public function insert(array $row)
+    {
+        return $this->connection->insert($this->tableName, $row);
     }
 }

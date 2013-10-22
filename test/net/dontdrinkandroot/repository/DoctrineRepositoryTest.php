@@ -10,10 +10,24 @@ use net\dontdrinkandroot\schema;
 class DoctrineRepositoryTest extends DoctrineTestCase
 {
 
+    /**
+     * @var Repository
+     */
+    protected static $repository;
+
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        self::$repository = new DoctrineRepository(
+            self::getDoctrineConnection(),
+            schema\Tables::ARTICLE,
+            schema\Article::ID
+        );
+    }
+
     public function testFind()
     {
-        $oRepository = new DoctrineRepository($this->getDoctrineConnection(), "Article", "id");
-        $result = $oRepository->find(1);
+        $result = self::$repository->find(1);
 
         $this->assertEquals(1, $result["id"]);
         $this->assertEquals("Article One", $result["name"]);
@@ -23,22 +37,18 @@ class DoctrineRepositoryTest extends DoctrineTestCase
 
     public function testDelete()
     {
-        $repository = new DoctrineRepository($this->getDoctrineConnection(), "Article", "id");
-
-        $result = $repository->find(3);
+        $result = self::$repository->find(3);
         $this->assertNotNull($result);
 
-        $this->assertEquals(1, $repository->delete(3));
+        $this->assertEquals(1, self::$repository->delete(3));
 
-        $result = $repository->find(3);
+        $result = self::$repository->find(3);
         $this->assertNull($result);
     }
 
     public function testFindAll()
     {
-        $repository = new DoctrineRepository($this->getDoctrineConnection(), schema\Tables::ARTICLE, schema\Article::ID);
-
-        $results = $repository->findAll();
+        $results = self::$repository->findAll();
 
         $this->assertCount(3, $results);
 
@@ -57,6 +67,26 @@ class DoctrineRepositoryTest extends DoctrineTestCase
         $this->assertEquals(3, $result['id']);
         $this->assertEquals('Article Three', $result['name']);
         $this->assertEquals(1.23, $result['price']);
+    }
+
+    public function testInsert()
+    {
+        $articleName = 'A new article';
+        $articlePrice = 42.21;
+
+        $row = array(schema\Article::NAME => $articleName, schema\Article::PRICE => $articlePrice);
+
+        $this->assertEquals(1, self::$repository->insert($row));
+
+        $result = self::$repository->findAll();
+
+        $this->assertCount(4, $result);
+
+        $insertedRow = $result[3];
+
+        $this->assertNotNull($insertedRow[schema\Article::ID]);
+        $this->assertEquals($articleName, $insertedRow[schema\Article::NAME]);
+        $this->assertEquals($articlePrice, $insertedRow[schema\Article::PRICE]);
     }
 
 }

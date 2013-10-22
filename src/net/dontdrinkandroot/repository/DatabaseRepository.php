@@ -31,7 +31,7 @@ class DatabaseRepository extends AbstractRepository
             return null;
         }
 
-        /* This exception should is only thrown if the primary key was not specified correctly */
+        /* This exception is only thrown if the primary key was not specified correctly */
         if (1 < count($results)) {
             throw new TooManyResultsException(
                 'Found ' . count($results) .
@@ -58,6 +58,11 @@ class DatabaseRepository extends AbstractRepository
     public function findAll()
     {
         return $this->database->find($this->tableName, "1 = 1");
+    }
+
+    public function insert(array $row)
+    {
+        return $this->database->insert($this->tableName, $row);
     }
 
 }
