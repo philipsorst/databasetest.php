@@ -21,7 +21,7 @@ class DoctrineRepository extends AbstractRepository
 
     public function find($id)
     {
-        $sql = "SELECT * FROM `" . $this->tableName . "` WHERE `" . $this->primaryKey . "` = :id";
+        $sql = 'SELECT * FROM `' . $this->tableName . '` WHERE `' . $this->primaryKey . '` = :id';
         $results = $this->connection->fetchAll($sql, array(":id" => $id));
 
         if (0 == count($results)) {
@@ -42,5 +42,11 @@ class DoctrineRepository extends AbstractRepository
     public function delete($id)
     {
         return $this->connection->delete($this->tableName, array($this->primaryKey => $id));
+    }
+
+    public function findAll()
+    {
+        $sql = 'SELECT * FROM `' . $this->tableName . '`';
+        return $this->connection->fetchAll($sql);
     }
 }

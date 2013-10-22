@@ -10,12 +10,19 @@ interface Repository
     /**
      * Find an entity by its primary key.
      *
-     * @param mixed $mId The id of the entity to find.
+     * @param mixed $id The id of the entity to find.
      *
      * @return array An array containing the corresponding row of the entity or null if none was found.
      * @throws \net\dontdrinkandroot\exception\TooManyResultsException Thrown if more than one result was found.
      */
     public function find($id);
+
+    /**
+     * Finds all entities.
+     *
+     * @return array An associative array that contains all entities in the database table.
+     */
+    public function findAll();
 
     /**
      * Deletes an entity by its primary key.

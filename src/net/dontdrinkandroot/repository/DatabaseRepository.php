@@ -11,17 +11,17 @@ class DatabaseRepository extends AbstractRepository
     /**
      * @var Database
      */
-    protected $dataBase;
+    protected $database;
 
     public function __construct(Database $database, $tableName, $primaryKey)
     {
         parent::__construct($tableName, $primaryKey);
-        $this->dataBase = $database;
+        $this->database = $database;
     }
 
     public function find($id)
     {
-        $results = $this->dataBase->find(
+        $results = $this->database->find(
             $this->tableName,
             '`' . $this->primaryKey . '` = :id',
             array(':id' => $id)
@@ -44,15 +44,20 @@ class DatabaseRepository extends AbstractRepository
 
     public function delete($id)
     {
-        $sSql = 'DELETE FROM `' . $this->tableName . '` ' .
+        $sql = 'DELETE FROM `' . $this->tableName . '` ' .
             'WHERE `' . $this->primaryKey . '` = :id';
 
         /** @var \PDOStatement */
-        $statement = $this->dataBase->prepare($sSql);
+        $statement = $this->database->prepare($sql);
         $statement->bindParam(':id', $id);
         $statement->execute();
 
         return $statement->rowCount();
+    }
+
+    public function findAll()
+    {
+        return $this->database->find($this->tableName, "1 = 1");
     }
 
 }

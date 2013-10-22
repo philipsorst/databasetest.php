@@ -19,6 +19,6 @@ class DatabaseArticleRepository extends DatabaseRepository implements ArticleRep
         $sWhere = '`' . schema\Article::PRICE . '` > :price';
         $aParameters = array(':price' => $price);
 
-        return $this->dataBase->find($this->tableName, $sWhere, $aParameters);
+        return $this->database->find($this->tableName, $sWhere, $aParameters);
     }
 }

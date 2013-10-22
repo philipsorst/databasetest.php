@@ -25,7 +25,7 @@ class Database extends PDO
      *
      * @return array The result as an array.
      */
-    public function find($tableName, $whereClause, $parameters, $columnNames = null)
+    public function find($tableName, $whereClause, $parameters = array(), $columnNames = null)
     {
         $sSql = 'SELECT ' . $this->buildColumns($columnNames) . ' ' .
             'FROM `' . $tableName . '` ' .
