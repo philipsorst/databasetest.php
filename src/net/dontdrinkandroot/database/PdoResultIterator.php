@@ -7,7 +7,7 @@ use \Iterator;
 use \PDOStatement;
 use \PDO;
 
-class ResultIterator implements Iterator
+class PdoResultIterator implements Iterator
 {
 
     private $statement;

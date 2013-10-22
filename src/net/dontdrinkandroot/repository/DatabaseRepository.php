@@ -13,28 +13,18 @@ class DatabaseRepository extends AbstractRepository
      */
     protected $dataBase;
 
-
-
     public function __construct(Database $database, $tableName, $primaryKey)
     {
         parent::__construct($tableName, $primaryKey);
         $this->dataBase = $database;
     }
 
-    /**
-     * Find an entity by its primary key.
-     *
-     * @param mixed $mId The id of the entity to find.
-     *
-     * @return array An array containing the corresponding row of the entity or null if none was found.
-     * @throws \net\dontdrinkandroot\exception\TooManyResultsException Thrown if more than one result was found.
-     */
-    public function find($mId)
+    public function find($id)
     {
         $results = $this->dataBase->find(
             $this->tableName,
             '`' . $this->primaryKey . '` = :id',
-            array(':id' => $mId)
+            array(':id' => $id)
         );
 
         if (0 == count($results)) {
@@ -52,14 +42,6 @@ class DatabaseRepository extends AbstractRepository
         return $results[0];
     }
 
-    /**
-     * Deletes an entity by its primary key.
-     *
-     * @param mixed $id The id of the entity to delete.
-     *
-     * @return int The number of rows that were affected, this should be 0 or 1 depending on whether
-     * the entity existed and the primary key was correctly specified.
-     */
     public function delete($id)
     {
         $sSql = 'DELETE FROM `' . $this->tableName . '` ' .
@@ -72,6 +54,5 @@ class DatabaseRepository extends AbstractRepository
 
         return $statement->rowCount();
     }
-
 
 }

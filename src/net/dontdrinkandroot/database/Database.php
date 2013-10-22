@@ -66,7 +66,7 @@ class Database extends PDO
      * @param string $columnNames The column names to select, omit to select all columns.
      * @param int $batchSize   How many entries to fetch in one database query.
      *
-     * @return ResultIterator An Iterator that transparently iterates over all results founds, refetching from database
+     * @return PdoResultIterator An Iterator that transparently iterates over all results founds, refetching from database
      * if necessary.
      */
     public function findBatch(
@@ -78,7 +78,7 @@ class Database extends PDO
     ) {
         $statement = $this->prepareFindWithLimit($tableName, $whereClause, $columnNames);
 
-        return new ResultIterator($statement, $parameters, $batchSize);
+        return new PdoResultIterator($statement, $parameters, $batchSize);
     }
 
     private function buildColumns($columnNames)
