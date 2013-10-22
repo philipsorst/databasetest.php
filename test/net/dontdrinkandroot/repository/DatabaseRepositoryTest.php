@@ -88,4 +88,21 @@ class DatabaseRepositoryTest extends DatabaseTestCase
         $this->assertEquals($articlePrice, $insertedRow[schema\Article::PRICE]);
     }
 
+    public function testUpdate()
+    {
+        $changedName = 'Changed Name';
+        $changedPrice = 666.66;
+
+        $values = array(schema\Article::NAME => $changedName, schema\Article::PRICE => $changedPrice);
+        $where = array(schema\Article::ID => 1);
+
+        $this->assertEquals(1, self::$repository->update($values, $where));
+
+        $row =  self::$repository->find(1);
+
+        $this->assertEquals(1, $row[schema\Article::ID]);
+        $this->assertEquals($changedName, $row[schema\Article::NAME]);
+        $this->assertEquals($changedPrice, $row[schema\Article::PRICE]);
+    }
+
 }

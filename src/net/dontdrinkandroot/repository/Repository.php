@@ -42,4 +42,17 @@ interface Repository
      */
     public function insert(array $row);
 
+    /**
+     * Update values in the table based on where conditions.
+     *
+     * @param array  $values    The values to update as an associative array where the key is the column and the
+     *                          value the value.
+     * @param array  $where     The where clause to apply as an associative array where the key is the column and
+     *                          the value the value, each parameter is evaluated for equality and all parameters
+     *                          are used in conjunction.
+     *
+     * @return int The number of rows affected.
+     */
+    public function update(array $values, array $where);
+
 }

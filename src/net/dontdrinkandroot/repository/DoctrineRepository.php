@@ -54,4 +54,9 @@ class DoctrineRepository extends AbstractRepository
     {
         return $this->connection->insert($this->tableName, $row);
     }
+
+    public function update(array $values, array $where)
+    {
+        return $this->connection->update($this->tableName, $values, $where);
+    }
 }

@@ -65,4 +65,9 @@ class DatabaseRepository extends AbstractRepository
         return $this->database->insert($this->tableName, $row);
     }
 
+    public function update(array $values, array $where)
+    {
+        return $this->database->update($this->tableName, $values, $where);
+    }
+
 }
