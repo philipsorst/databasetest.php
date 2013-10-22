@@ -19,7 +19,7 @@ class DatabaseTestCase extends \PHPUnit_Extensions_Database_TestCase
         self::$databaseManager = new DatabaseManager();
         self::$databaseManager->registerDatabase(
             "test",
-            new SqLiteDatabaseConfig("sqlite::memory:")
+            new SqLiteDatabaseConfig(":memory:")
         );
     }
 
