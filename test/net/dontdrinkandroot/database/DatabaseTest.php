@@ -87,11 +87,14 @@ class DatabaseTest extends DatabaseTestCase
 
     public function testInsert()
     {
+        $articleName = 'A new article';
+        $articlePrice = 42.21;
+
         $database = $this->getDatabase();
 
-        $row = array(schema\Article::NAME => 'A new article', schema\Article::PRICE => 42.21);
+        $row = array(schema\Article::NAME => $articleName, schema\Article::PRICE => $articlePrice);
 
-        $database->insert(schema\Tables::ARTICLE, $row);
+        $this->assertEquals(1, $database->insert(schema\Tables::ARTICLE, $row));
 
         $result = $database->find(schema\Tables::ARTICLE, "1 = 1");
 
@@ -100,7 +103,29 @@ class DatabaseTest extends DatabaseTestCase
         $insertedRow = $result[3];
 
         $this->assertNotNull($insertedRow[schema\Article::ID]);
-        $this->assertEquals('A new article', $insertedRow[schema\Article::NAME]);
-        $this->assertEquals(42.21, $insertedRow[schema\Article::PRICE]);
+        $this->assertEquals($articleName, $insertedRow[schema\Article::NAME]);
+        $this->assertEquals($articlePrice, $insertedRow[schema\Article::PRICE]);
     }
+
+    public function testUpdate()
+    {
+        $changedName = 'Changed Name';
+        $changedPrice = 666.66;
+
+        $values = array(schema\Article::NAME => $changedName, schema\Article::PRICE => $changedPrice);
+        $where = array(schema\Article::ID => 1);
+
+        $database = $this->getDatabase();
+
+        $this->assertEquals(1, $database->update(schema\Tables::ARTICLE, $values, $where));
+
+        $rows = $database->find(schema\Tables::ARTICLE, "id = :id", array(":id" => 1));
+        $this->assertCount(1, $rows);
+        $row = $rows[0];
+
+        $this->assertEquals(1, $row[schema\Article::ID]);
+        $this->assertEquals($changedName, $row[schema\Article::NAME]);
+        $this->assertEquals($changedPrice, $row[schema\Article::PRICE]);
+    }
+
 }

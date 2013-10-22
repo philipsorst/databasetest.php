@@ -100,6 +100,55 @@ class Database extends PDO
     }
 
     /**
+     * Update values in a table based on where conditions.
+     *
+     * @param string $tableName The name of the table to update.
+     * @param array  $values    The values to update as an associative array where the key is the column and the
+     *                          value the value.
+     * @param array  $where     The where clause to apply as an associative array where the key is the column and
+     *                          the value the value, each parameter is evaluated for equality and all parameters
+     *                          are used in conjunction.
+     *
+     * @return int The number of rows affected.
+     */
+    public function update($tableName, $values, $where)
+    {
+        $params = array();
+
+        $sql = 'UPDATE ' . $tableName . ' SET ';
+
+        $first = true;
+        foreach ($values as $column => $value) {
+            if (!$first) {
+                $sql .= ",";
+            }
+            $params[':' . $column] = $value;
+            $sql .= '`' . $column . '` = :' . $column;
+            $first = false;
+        }
+
+        $sql .= " WHERE ";
+
+        $first = true;
+        foreach ($where as $column => $value) {
+            if ($value === null) {
+                continue;
+            }
+            if (!$first) {
+                $sql .= " AND ";
+            }
+            $params[':where_' . $column] = $value;
+            $sql .= '`' . $column . '` = :where_' . $column;
+            $first = false;
+        }
+
+        $statement = $this->prepare($sql);
+        $statement->execute($params);
+
+        return $statement->rowCount();
+    }
+
+    /**
      * Find rows on the database with the given restrictions. The results are encapsulated in a ResultIterator that
      * only fetches the needed rows batchwise.
      *
