@@ -18,22 +18,22 @@ class Database extends PDO
     /**
      * Find rows on the database with the given restrictions.
      *
-     * @param string $tableName   Name of the database table.
-     * @param string $whereClause SQL that describes the WHERE Clause.
-     * @param array $parameters  Binded parameters that belong to the where clause.
-     * @param array $columnNames The column names to select, omit to select all columns.
+     * @param string $tableName    Name of the database table.
+     * @param string $whereClause  SQL that describes the WHERE Clause.
+     * @param array  $parameters   Bound parameters that belong to the where clause.
+     * @param array  $columnNames  The column names to select, omit to select all columns.
      *
      * @return array The result as an array.
      */
     public function find($tableName, $whereClause, $parameters = array(), $columnNames = null)
     {
-        $sSql = 'SELECT ' . $this->buildColumns($columnNames) . ' ' .
+        $sql = 'SELECT ' . $this->buildColumns($columnNames) . ' ' .
             'FROM `' . $tableName . '` ' .
             'WHERE ' . $whereClause;
-        $oStatement = $this->prepare($sSql);
-        $oStatement->execute($parameters);
+        $statement = $this->prepare($sql);
+        $statement->execute($parameters);
 
-        return $oStatement->fetchAll();
+        return $statement->fetchAll();
     }
 
     /**
@@ -41,19 +41,62 @@ class Database extends PDO
      *
      * @param string $tableName   Name of the database table.
      * @param string $whereClause SQL that describes the WHERE clause.
-     * @param array $columnNames The column names to select, omit to select all columns.
+     * @param array  $columnNames The column names to select, omit to select all columns.
      *
      * @return \PDOStatement The statement prepared to execute the SELECT query.
      */
     public function prepareFindWithLimit($tableName, $whereClause, $columnNames = null)
     {
-        $sSql = 'SELECT ' . $this->buildColumns($columnNames) . ' ' .
+        $sql = 'SELECT ' . $this->buildColumns($columnNames) . ' ' .
             'FROM `' . $tableName . '` ' .
             'WHERE ' . $whereClause . ' ' .
             'LIMIT :firstResult,:numResults';
-        $oStatement = $this->prepare($sSql);
+        $statement = $this->prepare($sql);
 
-        return $oStatement;
+        return $statement;
+    }
+
+    /**
+     * Inserts a row into a table.
+     *
+     * @param string $tableName The name of the table to insert into.
+     * @param array  $row       The row to insert as an associative array where the key is the column name and the value the value.
+     *
+     * @return int The number of affected rows (should always be 1 or something went wrong).
+     */
+    public function insert($tableName, $row)
+    {
+        $params = array();
+
+        $sql = 'INSERT INTO `' . $tableName . '` (';
+
+        $first = true;
+        foreach ($row as $column => $value) {
+            if (!$first) {
+                $sql .= ',';
+            }
+            $sql .= '`' . $column . '`';
+            $first = false;
+        }
+
+        $sql .= ') VALUES (';
+
+        $first = true;
+        foreach ($row as $column => $value) {
+            if (!$first) {
+                $sql .= ',';
+            }
+            $sql .= ':' . $column;
+            $params[':' . $column] = $value;
+            $first = false;
+        }
+
+        $sql .= ')';
+
+        $statement = $this->prepare($sql);
+        $statement->execute($params);
+
+        return $statement->rowCount();
     }
 
     /**
@@ -62,9 +105,9 @@ class Database extends PDO
      *
      * @param string $tableName   Name of the database table.
      * @param string $whereClause SQL that describes the WHERE clause.
-     * @param array $parameters  The parameters that belong to the where clause (excluding pagination parameters).
+     * @param array  $parameters  The parameters that belong to the where clause (excluding pagination parameters).
      * @param string $columnNames The column names to select, omit to select all columns.
-     * @param int $batchSize   How many entries to fetch in one database query.
+     * @param int    $batchSize   How many entries to fetch in one database query.
      *
      * @return PdoResultIterator An Iterator that transparently iterates over all results founds, refetching from database
      * if necessary.

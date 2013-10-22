@@ -84,4 +84,23 @@ class DatabaseTest extends DatabaseTestCase
         $resultIterator->next();
         $this->assertFalse($resultIterator->valid());
     }
+
+    public function testInsert()
+    {
+        $database = $this->getDatabase();
+
+        $row = array(schema\Article::NAME => 'A new article', schema\Article::PRICE => 42.21);
+
+        $database->insert(schema\Tables::ARTICLE, $row);
+
+        $result = $database->find(schema\Tables::ARTICLE, "1 = 1");
+
+        $this->assertCount(4, $result);
+
+        $insertedRow = $result[3];
+
+        $this->assertNotNull($insertedRow[schema\Article::ID]);
+        $this->assertEquals('A new article', $insertedRow[schema\Article::NAME]);
+        $this->assertEquals(42.21, $insertedRow[schema\Article::PRICE]);
+    }
 }

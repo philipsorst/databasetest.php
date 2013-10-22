@@ -12,7 +12,7 @@ class DatabaseTestCase extends \PHPUnit_Extensions_Database_TestCase
     /**
      * @var DatabaseManager
      */
-    private static $databaseManager;
+    protected static $databaseManager;
 
     public static function setUpBeforeClass()
     {
@@ -29,9 +29,9 @@ class DatabaseTestCase extends \PHPUnit_Extensions_Database_TestCase
 
         $createSql =
             "CREATE TABLE IF NOT EXISTS `Article` ( " .
-            "`id` bigint(20) NOT NULL, " .
-            "`name` varchar(255) NOT NULL, " .
-            "`price` float NOT NULL, " .
+            "`id` INTEGER NOT NULL, " .
+            "`name` TEXT NOT NULL, " .
+            "`price` FLOAT NOT NULL, " .
             "PRIMARY KEY (`id`) " .
             ");";
         $database->query($createSql);
