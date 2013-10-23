@@ -13,17 +13,37 @@ class DoctrineTest extends DatabaseTestCase
     public function testFind()
     {
         $conn = $this->getDoctrineConnection();
-        $aResults = $conn->fetchAll('SELECT * FROM Article WHERE price > :price', array('price' => 3.5));
+        $results = $conn->fetchAll('SELECT * FROM Article WHERE price > :price', array('price' => 3.5));
 
-        $this->assertCount(2, $aResults);
+        $this->assertCount(2, $results);
 
         /* This assumes that the ordering is by natural insertion */
-        $result = $aResults[0];
+        $result = $results[0];
         $this->assertEquals(1, $result['id']);
         $this->assertEquals('Article One', $result['name']);
         $this->assertEquals(3.99, $result['price']);
 
-        $result = $aResults[1];
+        $result = $results[1];
+        $this->assertEquals(2, $result['id']);
+        $this->assertEquals('Article Two', $result['name']);
+        $this->assertEquals(4.75, $result['price']);
+    }
+
+    public function testQueryBuilder()
+    {
+        $conn = $this->getDoctrineConnection();
+        $queryBuilder = $conn->createQueryBuilder();
+        $priceExpression = $queryBuilder->expr()->gt('a.price', 3.5);
+        $query = $queryBuilder->select('*')->from(schema\Tables::ARTICLE, 'a')->where($priceExpression);
+        $results = $query->execute()->fetchAll();
+
+        /* This assumes that the ordering is by natural insertion */
+        $result = $results[0];
+        $this->assertEquals(1, $result['id']);
+        $this->assertEquals('Article One', $result['name']);
+        $this->assertEquals(3.99, $result['price']);
+
+        $result = $results[1];
         $this->assertEquals(2, $result['id']);
         $this->assertEquals('Article Two', $result['name']);
         $this->assertEquals(4.75, $result['price']);
