@@ -22,16 +22,32 @@ class CachedDoctrineRepository extends DoctrineRepository
 
     public function find($id)
     {
-        $cacheKey = $this->tableName . '_' . $id;
+        $cacheKey = $this->getCacheKey($id);
         $row = $this->cache->get($cacheKey);
+
         if (false !== $row) {
             return $row;
         }
 
         $row = parent::find($id);
-        $this->cache->set($cacheKey, $row);
+        if (null !== $row) {
+            $this->cache->set($cacheKey, $row);
+        }
 
         return $row;
+    }
+
+    public function delete($id)
+    {
+        $numRowsAffected = parent::delete($id);
+        $this->cache->delete($this->getCacheKey($id));
+
+        return $numRowsAffected;
+    }
+
+    public function getCacheKey($id)
+    {
+        return $this->tableName . '_' . $id;
     }
 
 }
